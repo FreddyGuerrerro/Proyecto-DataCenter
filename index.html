@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tablero Power BI · Complemento de Data Center Expert 8.3</title>
+<meta name="description" content="Prototipo funcional de un tablero Power BI para el NOC del Data Center X: historias de usuario, ciclo de vida y pruebas.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#inicio">Datacenter · Power BI</a>
+  <nav id="nav" aria-label="Secciones">
+    <a href="#tablero">Tablero</a><a href="#proyecto">Proyecto</a><a href="#historias">Historias</a>
+    <a href="#ciclo">Ciclo de vida</a><a href="#pruebas">Pruebas</a><a href="#versiones">Versiones</a>
+  </nav>
+  <button id="theme" class="ghost" aria-label="Cambiar tema">◐</button>
+</header>
+
+<main>
+<section id="inicio" class="hero">
+  <p class="eyebrow">Proyecto de software · Universidad IBERO · Actividad 4</p>
+  <h1>Tablero de control Power BI como complemento de Data Center Expert 8.3</h1>
+  <p class="lead">Prototipo funcional y evolutivo que ayuda al operador del NOC a decidir <strong>qué equipo atender primero</strong>, con umbrales por color, filtros y un ranking de alertas.</p>
+  <div class="stats" id="stats"></div>
+  <a class="btn" href="#tablero">Ver el tablero</a>
+</section>
+
+<section id="tablero">
+  <h2>Tablero</h2>
+  <p class="muted">Informe incrustado de Power BI. Si aún no se configuró el enlace (<code>POWERBI_EMBED_URL</code> en <code>script.js</code>), se muestran las capturas de la versión 2.</p>
+  <div class="tabs" role="tablist" id="pageTabs"></div>
+  <div class="frame" id="frame"></div>
+  <div class="detail" id="pageInfo"></div>
+</section>
+
+<section id="proyecto">
+  <h2>Relación con el proyecto de software</h2>
+  <p class="muted">Power BI es la capa de análisis del sistema; Data Center Expert sigue siendo la fuente y conserva las alarmas oficiales.</p>
+  <ol class="flow" id="flow"></ol>
+  <p class="note">La actualización es manual (carga de archivos exportados). No es supervisión en tiempo real.</p>
+</section>
+
+<section id="historias">
+  <h2>Historias de usuario y criterios de aceptación</h2>
+  <div class="filters" id="huFilters"></div>
+  <div class="cards" id="huList"></div>
+</section>
+
+<section id="ciclo">
+  <h2>Ciclo de vida del prototipo</h2>
+  <ol class="timeline" id="timeline"></ol>
+</section>
+
+<section id="pruebas">
+  <h2>Pruebas funcionales</h2>
+  <p class="muted">Marca las pruebas a medida que las ejecutes. El avance se guarda en tu navegador.</p>
+  <div class="progress"><div id="bar"></div></div>
+  <p id="progressText" class="muted"></p>
+  <ul class="tests" id="tests"></ul>
+  <button class="ghost" id="resetTests">Reiniciar avance</button>
+</section>
+
+<section id="versiones">
+  <h2>Versión 1 frente a versión 2</h2>
+  <div class="toolbar">
+    <label>Página <select id="cmpPage"></select></label>
+    <label>Deslizador <input type="range" id="cmpRange" min="0" max="100" value="50"></label>
+  </div>
+  <div class="compare" id="compare">
+    <img id="cmpB" alt="Versión 2">
+    <div class="over" id="cmpOver"><img id="cmpA" alt="Versión 1"></div>
+    <span class="tag l">V1</span><span class="tag r">V2</span>
+  </div>
+  <p class="muted" id="cmpNote"></p>
+</section>
+</main>
+
+<footer>
+  <p>Freddy Orlando Guerrero G. · Proyecto de software (24082026_C12_202634) · Prof. Ana Mosquera</p>
+  <p class="muted">Aviso: las capturas muestran nombres de equipos del caso; respeta el acuerdo de confidencialidad antes de publicar.</p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
