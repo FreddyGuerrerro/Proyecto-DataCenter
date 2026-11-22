@@ -1,4 +1,5 @@
 'use strict';
+/* DATOS FICTICIOS: data.js es un conjunto sintético con la estructura de DatosBI. */
 /* Réplica interactiva del informe Power BI "Proyecto_Datacenter_Version_2.pbix".
    Datos: tabla DatosBI exportada del PBIX (data.js). Medidas: traducción de las medidas DAX del modelo. */
 /* Enlace opcional al informe publicado en Power BI (Archivo > Insertar informe). */
@@ -49,7 +50,7 @@ const M = {
 const GREEN = '#348b74';
 const T = (x, y, w, h, text, o = {}) => ({ t: 'text', x, y, w, h, text, ...o });
 const SL = (x, y, w, h, f, o = {}) => ({ t: 'slicer', x, y, w, h, f, ...o });
-const UPS = ['UPS 1', 'UPS 2', 'POTENCIA 2  UPS'], PDUS = ['PDU 1', 'PDU 2', 'PDU INVERSOR', 'PDU UPS'], SUBS = ['SÓTANO SUBESTACIÓN AUTOPISTA', 'SÓTANO SUBESTACIÓN MORATO'];
+const UPS = ['UPS 1', 'UPS 2', 'POTENCIA 2  UPS'], PDUS = ['PDU 1', 'PDU 2', 'PDU INVERSOR', 'PDU UPS'], SUBS = ['SUBESTACIÓN SUR', 'SUBESTACIÓN NORTE'];
 const tbl = (x, y, w, h, cols, o = {}) => ({ t: 'table', x, y, w, h, cat: 'Equipo', cols, ...o });
 const bar = (x, y, w, h, m, o = {}) => ({ t: 'bar', x, y, w, h, cat: 'Equipo', ms: [m], ...o });
 
@@ -324,7 +325,7 @@ const HU = [
   ['HU-01', 'Vista general de climatización y potencia', 'Páginas Aires y Temperaturas y Potencia y Eléctrico con indicadores por variable.', 'Implementado'],
   ['HU-02', 'Filtrar por equipo, sección y variable', 'Los segmentadores actualizan los visuales de la página (menos de 3 s).', 'Implementado · tiempo por medir'],
   ['HU-03', 'Identificar lecturas fuera de umbral', 'Temperatura fuera de 18–27 °C, tensión fuera de 108–132 V, frecuencia fuera de 59,5–60,5 Hz.', 'Reglas configuradas'],
-  ['HU-04', 'Ranking de equipos con más alertas', 'El Top 5 coincide con un conteo independiente.', 'Verificado'],
+  ['HU-04', 'Ranking de equipos con más alertas', 'El Top 5 coincide con un conteo independiente (verificación en esta pestaña).', 'Verificado'],
   ['HU-05', 'Carga de UPS y balance por fase', 'Salida/entrada mayor a 100 % resaltada; balance A/B/C en gráfico circular.', 'Implementado'],
   ['HU-06', 'Actualizar con un archivo exportado', 'Cambiar la ruta del origen y actualizar (manual, no tiempo real).', 'Por probar'],
   ['HU-07', 'Consultar desde un navegador', 'Esta página, publicada en GitHub Pages.', 'Entregado · publicación por registrar']
@@ -334,11 +335,11 @@ function project() {
   $('#hu').append(...HU.map(h => el('article', 'card', `<span class="badge">${h[3]}</span><h3>${h[0]} · ${h[1]}</h3><p>${h[2]}</p>`)));
   // Verificación automática del Top 5 (conteo independiente)
   const cnt = new Map(); for (let i = 0; i < N; i++) if (DE[i] === DEG && V[i] != null && (V[i] < 18 || V[i] > 27)) cnt.set(E[i], (cnt.get(E[i]) || 0) + 1);
-  const top = [...cnt].sort((a, b) => b[1] - a[1]).slice(0, 5), doc = [360, 280, 236, 217, 162];
+  const top = [...cnt].sort((a, b) => b[1] - a[1]).slice(0, 5);
   const board = series(buildCtx(PAGES[2], state[2], false), { cat: 'Equipo' }, 'Alertas_Totales', null, false, 5);
-  $('#verif').innerHTML = '<tr><th>#</th><th>Equipo</th><th>Tablero (Alertas_Totales)</th><th>Conteo independiente</th><th>Documento</th><th>Coincide</th></tr>' + top.map((t, i) => {
-    const b = board[i]; const ok = b && b.v === t[1] && t[1] === doc[i];
-    return `<tr><td>${i + 1}</td><td>${label('Equipo', t[0])}</td><td>${b ? b.v : ''}</td><td>${t[1]}</td><td>${doc[i]}</td><td>${ok ? 'Sí' : 'No'}</td></tr>`;
+  $('#verif').innerHTML = '<tr><th>#</th><th>Equipo</th><th>Tablero (Alertas_Totales)</th><th>Conteo independiente</th><th>Coincide</th></tr>' + top.map((t, i) => {
+    const b = board[i]; const ok = b && b.v === t[1];
+    return `<tr><td>${i + 1}</td><td>${label('Equipo', t[0])}</td><td>${b ? b.v : ''}</td><td>${t[1]}</td><td>${ok ? 'Sí' : 'No'}</td></tr>`;
   }).join('');
   let done = {}; try { done = JSON.parse(localStorage.getItem('pf')) || {}; } catch {}
   const list = $('#tests'), upd = () => { const n = TESTS.filter(t => done[t[0]]).length; $('#bar').style.width = n / TESTS.length * 100 + '%'; $('#ptxt').textContent = `${n} de ${TESTS.length} pruebas marcadas`; };
