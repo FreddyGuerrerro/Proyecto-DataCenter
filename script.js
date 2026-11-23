@@ -185,15 +185,16 @@ function rBar(vis, ctxs, pgi, vid) {
     const it = el('div', 'it' + (sel != null && sel !== r.k ? ' dim' : ''));
     it.title = `${r.name}: ${vals.map(v => fmt(v, f)).join(' / ')}`;
     if (vis.col) {
-      it.innerHTML = `<div class="cols">${vals.map((v, i) => `<i style="height:${v / max * 100}%;background:${colors[i]}"></i>`).join('')}</div><span class="lb">${r.name}</span>`;
+      it.innerHTML = `<div class="cols">${vals.map((v, i) => `<div class="cb"><em>${fmt(v, f)}</em><i style="height:calc((100% - var(--u)*16)*${v / max});background:${colors[i]}"></i></div>`).join('')}</div><span class="lb">${r.name}</span>`;
     } else {
-      it.innerHTML = `<span class="lb">${r.name}</span><div class="trk"><i style="width:${vals[0] / max * 100}%;background:${colors[0]}"></i></div>`;
+      it.innerHTML = `<span class="lb">${r.name}</span><div class="trk"><i style="width:calc((100% - var(--u)*64)*${vals[0] / max});background:${colors[0]}"></i><em>${fmt(vals[0], f)}</em></div>`;
     }
     pickable(it, r.k, pgi, vid); wrap.append(it);
   });
   p.append(wrap);
   const ax = el('div', 'axis', `<span>0</span><span>${fmt(max / 2, f === 'pct' ? 'pct' : f === 'int' ? 'int' : 'n2').replace(/,00$/, '')}</span><span>${fmt(max, f === 'pct' ? 'pct' : f === 'int' ? 'int' : 'n2').replace(/,00$/, '')}</span>`);
   p.append(ax);
+  if (ms.length > 1) p.style.paddingBottom = u(26);
   if (ms.length > 1) p.append(el('div', 'legend', ms.map((m, i) => `<b style="background:${colors[i]}"></b>${m}`).join(' ')));
   if (!rows.length) wrap.innerHTML = '<div class="empty">Sin datos con el filtro actual</div>';
   return p;
@@ -264,7 +265,8 @@ function rSlicer(vis, pgi, pg) {
   const p = panel(vis, 'slicer'), st = state[pgi], f = vis.f, fl = pg.filt[f] || (() => true);
   let items = D[f + '_u'].map((n, i) => ({ n, i })).filter(x => x.n && fl(x.n));
   const dir = (pg.sortDir && pg.sortDir[f]) || 1; items.sort((a, b) => (a.n < b.n ? -1 : 1) * dir);
-  p.innerHTML = `<div class="sh">${f}</div><div class="sl-list"></div>`;
+  p.innerHTML = `<div class="sh"><span>${f}</span><button class="x" title="Borrar selección de ${f}"${st[f].size ? '' : ' hidden'}>✕ borrar</button></div><div class="sl-list"></div>`;
+  $('.x', p).onclick = () => { st[f].clear(); st.pick = null; st.pickSrc = null; render(); };
   const list = $('.sl-list', p);
   items.forEach(x => {
     const lb = el('label', '', `<input type="checkbox"${st[f].has(x.i) ? ' checked' : ''}><span>${x.n}</span>`);
@@ -297,7 +299,7 @@ function render() {
   });
   const nIn = ctxs.pick.rv.length;
   $('#status').textContent = `${ctxs.all.rv.length.toLocaleString('es-CO')} de ${N.toLocaleString('es-CO')} lecturas en el contexto de filtros` + (st.pick != null ? ` · Selección: ${label('Equipo', st.pick)}` : '');
-  $('#clear').hidden = !(st.Equipo.size || st.Seccion.size || st.Variable.size || st.pick != null);
+  $('#clear').disabled = !(st.Equipo.size || st.Seccion.size || st.Variable.size || st.pick != null);
   renderDax(pg);
 }
 function renderDax(pg) {
@@ -352,6 +354,7 @@ function project() {
 }
 
 $('#clear').onclick = () => { const s = state[cur]; s.Equipo.clear(); s.Seccion.clear(); s.Variable.clear(); s.pick = null; s.pickSrc = null; render(); };
+addEventListener('keydown', e => { if (e.key === 'Escape') $('#clear').click(); });
 tabs(); project();
 if (POWERBI_URL) { const a = $('#pbiLink'); a.href = POWERBI_URL; a.target = '_blank'; a.hidden = false; }
 addEventListener('resize', fit);
